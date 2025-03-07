@@ -27,7 +27,7 @@ setup(
         "License :: OSI Approved :: BSD License",
         "Operating System :: OS Independent",
     ],
-    license_files = ('LICENSE',),
+    license_files = [],
     python_requires='>=3.8',
     project_urls={
         'Bug Reports': 'https://github.com/aesuli/updownapp/issues',
