@@ -1,18 +1,17 @@
 from setuptools import setup, find_packages
-from os import path
+import pathlib
 
-top_level_directory = path.abspath(path.dirname(__file__))
-with open(path.join(top_level_directory, 'README.md'), encoding='utf-8') as file:
-    long_description = file.read()
+here = pathlib.Path(__file__).parent.resolve()
 
-with open(path.join(top_level_directory, 'requirements.txt')) as file:
-    required = file.read().splitlines()
+long_description = (here / 'README.md').read_text(encoding='utf-8')
+
+requirements_list = (here / 'requirements.txt').read_text(encoding='utf-8').split()
 
 setup(
     name="updownapp",
     version="0.1.0",
     packages=find_packages(),
-    install_requires=required,
+    install_requires=requirements_list,
     entry_points={
         "console_scripts": [
             "updownapp=updownapp.app:main",
