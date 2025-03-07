@@ -15,11 +15,16 @@ setup(
     description="A minimal HTTP file transfer server",
     author="Andrea Esuli",
     author_email="andrea@esuli.it",
+    license='BSD',
     url="https://github.com/aesuli/updownapp",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: BSD License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.8',
+    project_urls={
+        'Bug Reports': 'https://github.com/aesuli/updownapp/issues',
+        'Source': 'https://github.com/aesuli/updownapp/',
+    },
 )
