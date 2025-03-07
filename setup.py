@@ -5,7 +5,11 @@ here = pathlib.Path(__file__).parent.resolve()
 
 long_description = (here / 'README.md').read_text(encoding='utf-8')
 
+print(long_description)
+
 requirements_list = (here / 'requirements.txt').read_text(encoding='utf-8').split()
+
+print(requirements_list)
 
 setup(
     name="updownapp",
