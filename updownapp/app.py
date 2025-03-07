@@ -223,7 +223,7 @@ class FileTransferApp:
         
         for file in uploaded_files:
             print(file.filename)
-            file_path = os.path.join(self.data_dir, file.filename)
+            file_path = os.path.join(self.data_dir, file.filename.encode(file.headers.encodings[0]).decode('utf-8'))
             with open(file_path, 'wb') as f:
                 while chunk := file.file.read(8192):
                     f.write(chunk)
@@ -303,7 +303,7 @@ def signal_handler(signal, frame):
     cherrypy.engine.exit()
     sys.exit(0)
 
-if __name__ == '__main__':
+def main():
     args = parse_arguments()
     
     # Read the password from the file
@@ -312,19 +312,21 @@ if __name__ == '__main__':
     if password:
         password_hash = hashlib.sha256(password.encode()).hexdigest()
     
-    # Update CherryPy configuration
-    cherrypy_config = {
-        'server.socket_host': args.host,
-        'server.socket_port': args.port,
-        'server.max_request_body_size': 1024 * 1024 * 1024 * 1024,  # Set high limit for large files
-        'server.socket_timeout': 60,
-        'tools.sessions.on': True,  # Enable sessions
-        'tools.sessions.timeout': 10,  # Session timeout in minutes
+    # CherryPy configuration
+    config = {
+        'global': {
+            'server.socket_host': args.host,
+            'server.socket_port': args.port,
+            'server.max_request_body_size': 0,
+            'server.socket_timeout': 60,
+            'tools.sessions.on': True,  # Enable sessions
+            'tools.sessions.timeout': 10,  # Session timeout in minutes
+        }
     }
 
     # Add SSL configuration if certificate and key are provided
     if args.ssl_cert and args.ssl_key:
-        cherrypy_config.update({
+        config.update({
             'server.ssl_module': 'builtin',
             'server.ssl_certificate': args.ssl_cert,
             'server.ssl_private_key': args.ssl_key,
@@ -333,8 +335,6 @@ if __name__ == '__main__':
     else:
         print("HTTPS disabled. Running in HTTP mode.")
 
-    cherrypy.config.update(cherrypy_config)
-    
     # Register the signal handler for Ctrl+C
     signal.signal(signal.SIGINT, signal_handler)
     
@@ -346,4 +346,7 @@ if __name__ == '__main__':
         password_hash=password_hash
     )
 
-    cherrypy.quickstart(app)
+    cherrypy.quickstart(app,'/', config)
+
+if __name__ == '__main__':
+    main()

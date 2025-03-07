@@ -1,56 +1,93 @@
-# Minimal File Transfer HTTP Server
+# UpDownApp
 
-A simple file upload server built using CherryPy that allows users to upload multiple files via a web interface.
+UpDownApp is a minimal HTTP file transfer server built using CherryPy. 
+It allows users to upload and download files through a simple web interface. 
+The application supports optional password protection, SSL for secure communication, and customizable data storage directories.
+
+I implemented a first version of this application when I needed to transfer files from an old iPhone to a Linux desktop.
+Writing a minimal CherryPy application was for me the quickest thing, also not requiring to install dedicates services on the desktop or apps on the iPhone (which was almost impossible due to its age).
+I found myself using it from time to time, especially when I need to transfer lots of file or large files to/from a old/limited-access device which yet offers a browser.
 
 ## Features
-- Web-based file upload form
-- Supports multiple file uploads
-- Configurable host, port, and upload directory
-- Simple and lightweight
+
+- **File Upload**: Users can upload multiple files to the server.
+- **File Download**: Users can download individual files or multiple files as a ZIP archive.
+- **Password Protection**: Optional password-based authentication to restrict access.
+- **SSL Support**: Secure communication using HTTPS with provided SSL certificate and key.
+- **Customizable Data Directory**: Specify the directory where files are stored.
 
 ## Installation
 
-Ensure you have Python installed (version 3.6 or higher recommended). Then, install the required dependencies:
+You can install UpDownApp using `pip`:
 
-```sh
-pip install cherrypy
+```bash
+pip install updownapp
+```
+
+Alternatively, you can install it directly from the source:
+
+```bash
+git clone https://github.com/aesuli/updownapp.git
+cd updownapp
+pip install .
 ```
 
 ## Usage
 
-Run the server with default settings:
+Once installed, you can start the server using the `updownapp` command:
 
-```sh
-python file_upload_server.py
+```bash
+updownapp [OPTIONS]
 ```
 
-Or specify custom settings:
+Options:
 
-```sh
-python file_upload_server.py --host 127.0.0.1 --port 9090 --upload-dir my_uploads
+`--host`: The host address to bind the server to (default: `0.0.0.0`).
+
+`--port`: The port number to listen on (default: `8080`).
+
+`--data-dir`: The directory to store and serve files (default: `./data`).
+
+`--disable-upload`: Disable file upload functionality.
+
+`--disable-download`: Disable file download functionality.
+
+`--ssl-cert`: Path to the SSL certificate file (for HTTPS).
+
+`--ssl-key`: Path to the SSL private key file (for HTTPS).
+
+`--passwordfile`: Path to a file containing the password for authentication.
+
+### Examples
+
+Start the server with default settings:
+
+```bash
+updownapp
 ```
 
-### Arguments
-| Argument      | Description                            | Default Value |
-|--------------|--------------------------------|--------------|
-| `--host`     | Server host address             | `0.0.0.0`    |
-| `--port`     | Server port number              | `8080`       |
-| `--upload-dir` | Directory to store uploaded files | `uploads`     |
+Start the server on a specific host and port:
 
-## How It Works
-- The server provides an HTML form at the root (`/`) where users can select and upload files.
-- Uploaded files are stored in the specified upload directory.
-- The response confirms the number of successfully uploaded files.
-
-## Example
-After running the server, open a browser and visit:
-
+```bash
+updownapp --host 127.0.0.1 --port 8000
 ```
-http://localhost:8080
-```
+Enable password protection by specifying a password file:
 
-Upload files using the form and they will be saved in the configured directory.
+```bash
+updownapp --passwordfile /path/to/password.txt
+```
+The password file should contain a single line with the plaintext password.
+
+Enable HTTPS by providing SSL certificate and key files:
+
+```bash
+updownapp --ssl-cert /path/to/cert.pem --ssl-key /path/to/key.pem
+```
 
 ## License
-This project is licensed under the [BSD License](LICENSE).
 
+UpDownApp is released under the BSD 3-Clause License. See the [LICENSE](LICENSE) file for more details.
+
+## Acknowledgments
+
+Built using the fantastic [CherryPy - A minimalist Python web framework](https://cherrypy.dev/).
